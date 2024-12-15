@@ -1,0 +1,82 @@
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+	"strconv"
+	"strings"
+	"unicode"
+)
+
+// Result: 564167 NOT CORRECT
+// Result: 560570 NOT CORRECT
+// Result: 560670
+func main() {
+	total := 0
+
+	file, err := os.ReadFile("input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	lines := strings.Split(string(file), "\n")
+	// lines = lines[:len(lines)-1]
+
+	for line, text := range lines {
+		fmt.Print(text)
+		numRunes := make([]rune, 0)
+
+		for i, r := range text {
+			if unicode.IsDigit(r) {
+				numRunes = append(numRunes, r)
+				continue
+			}
+
+			if len(numRunes) > 0 {
+				num, err := strconv.Atoi(string(numRunes))
+				if err != nil {
+					log.Fatalf("Could not parse '%v'", numRunes)
+				}
+				if validatePartNumber(lines, line, i-len(numRunes), i-1) {
+					total += num
+				} else {
+					fmt.Printf(" '%d'", num)
+					// if line > 0 {
+					// 	fmt.Println(lines[line-1])
+					// }
+					// fmt.Println(lines[line])
+					// fmt.Println(lines[line+1])
+				}
+				numRunes = make([]rune, 0)
+			}
+		}
+		fmt.Println()
+	}
+
+	fmt.Printf("Total: %d\n", total)
+}
+
+func validatePartNumber(lines []string, line int, start int, end int) bool {
+	for i := line - 1; i <= line+1; i++ {
+		if i < 0 || i >= len(lines) {
+			continue
+		}
+
+		for j := start - 1; j <= end+1; j++ {
+			if j < 0 || j >= len(lines[i]) {
+				continue
+			}
+			if isChar(lines[i][j]) {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
+func isChar(char byte) bool {
+	r := rune(char)
+	return r != '.' && !unicode.IsDigit(r)
+	// return lines[i][j] >= '!' && lines[i][j] <= '/'
+}
