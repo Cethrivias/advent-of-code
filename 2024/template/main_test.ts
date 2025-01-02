@@ -14,7 +14,7 @@ Deno.test("Part One. Example", function () {
 // });
 //
 //
-// Deno.test("Part Two. Example One", function () {
+// Deno.test("Part Two. Example", function () {
 //     const result = partTwo("example");
 //
 //     assertEquals(result, -1);
