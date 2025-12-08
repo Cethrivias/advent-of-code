@@ -1,4 +1,4 @@
-package day07
+package day08
 
 import (
 	"bufio"
@@ -8,16 +8,19 @@ import (
 
 func TestDayPart1(t *testing.T) {
 	tests := []struct {
-		file     string
-		expected int
+		file        string
+		connections int
+		expected    int
 	}{
 		{
-			file:     "example",
-			expected: 21,
+			file:        "example",
+			connections: 10,
+			expected:    40,
 		},
 		{
-			file:     "input",
-			expected: 1646,
+			file:        "input",
+			connections: 1000,
+			expected:    54180,
 		},
 	}
 
@@ -27,7 +30,7 @@ func TestDayPart1(t *testing.T) {
 			t.Error(err)
 		}
 
-		actual, err := part1(lines)
+		actual, err := part1(lines, test.connections)
 		if err != nil {
 			t.Error(err)
 		}
@@ -44,11 +47,11 @@ func TestDayPart2(t *testing.T) {
 	}{
 		{
 			file:     "example",
-			expected: 40,
+			expected: 25272,
 		},
 		{
 			file:     "input",
-			expected: 32451134474991,
+			expected: 25325968,
 		},
 	}
 
@@ -79,8 +82,8 @@ func BenchmarkPart2Input(b *testing.B) {
 	}
 }
 
-func readFile(filename string) (lines [][]rune, err error) {
-	lines = [][]rune{}
+func readFile(filename string) (lines []string, err error) {
+	lines = []string{}
 
 	file, err := os.Open(filename)
 	if err != nil {
@@ -90,7 +93,7 @@ func readFile(filename string) (lines [][]rune, err error) {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		lines = append(lines, []rune(scanner.Text()))
+		lines = append(lines, scanner.Text())
 	}
 
 	return lines, nil
